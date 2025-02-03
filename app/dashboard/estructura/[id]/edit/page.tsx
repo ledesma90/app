@@ -1,11 +1,16 @@
 import Form from "@/app/ui/estructura/edit-form";
 import Breadcrumbs from "@/app/ui/estructura/breadcrumbs";
-import { fetchEstructuraById } from "@/app/lib/data";
+import { fetchEstructura, fetchEstructuraById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const id = parseInt(params.id, 10);
-  const estructura = await fetchEstructuraById(id);
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+
+    const params = await props.params;
+    const id = parseInt(params.id, 10);
+    const [estructura, customers] = await Promise.all([
+      fetchEstructuraById(id),
+      fetchEstructura(),
+    ]);
 
   if (!estructura) {
     notFound();

@@ -16,7 +16,7 @@ export default async function Table({
   const estructura = await fetchFilteredEstructura(query, currentPage);
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="rounded-lg bg-gray-50 p-2 mt-6 flow-root">
       {/* Versión de escritorio */}
       <div className="hidden min-w-full lg:block">
         <table className="min-w-full text-gray-900">

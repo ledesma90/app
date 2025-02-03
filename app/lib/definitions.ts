@@ -86,3 +86,11 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type Estructura = {
+  id: number; // ID único del elemento (autoincremental)
+  nombre: string; // Nombre del elemento
+  descripcion: string; // Descripción del elemento
+  parent_id: number | null; // ID del elemento padre (puede ser nulo si es un elemento raíz)
+  nivel: number; // Nivel jerárquico del elemento (1 para elementos principales, 2 para subelementos, etc.)
+};
