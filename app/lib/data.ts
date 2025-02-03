@@ -221,3 +221,63 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error("Failed to fetch customer table.");
   }
 }
+
+export async function fetchEstructura(parentId: number | null = null) {
+  try {
+    const query = parentId
+      ? `SELECT * FROM estructura WHERE parent_id = ${parentId}`
+      : `SELECT * FROM estructura WHERE parent_id IS NULL`;
+    const data = await connectionPool.query(query);
+    return data.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch estructura data.");
+  }
+}
+
+export async function fetchEstructuraById(id: number) {
+  try {
+    const data = await connectionPool.query(
+      `SELECT * FROM estructura WHERE id = ${id}`
+    );
+    return data.rows[0];
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch estructura by ID.");
+  }
+}
+
+//const ITEMS_PER_PAGE = 6;
+
+export async function fetchFilteredEstructura(
+  query: string,
+  currentPage: number
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  try {
+    const data = await connectionPool.query(`
+      SELECT * FROM estructura
+      WHERE nombre ILIKE '%${query}%' OR descripcion ILIKE '%${query}%'
+      ORDER BY id ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `);
+    return data.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch estructura data.");
+  }
+}
+
+export async function fetchEstructuraPages(query: string) {
+  try {
+    const count = await connectionPool.query(`
+      SELECT COUNT(*) FROM estructura
+      WHERE nombre ILIKE '%${query}%' OR descripcion ILIKE '%${query}%'
+    `);
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total number of estructura pages.");
+  }
+}
