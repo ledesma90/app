@@ -7,10 +7,26 @@ import {
   ArrowRightIcon,
   PowerIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SideNav() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar cambios en el tamaño de la ventana
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 864);
+    handleResize(); // Verificar al cargar el componente
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Si es móvil, colapsa el menú automáticamente
+  useEffect(() => {
+    if (isMobile && !isCollapsed) {
+      setIsCollapsed(true);
+    }
+  }, [isMobile]);
 
   return (
     <div
